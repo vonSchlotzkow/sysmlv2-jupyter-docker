@@ -1,8 +1,7 @@
-# SysMLv2 Release to use. First is release version of the API server, the second is
-# the release version of the SysMLv2
-release = 2024-02
-sysml_release= 2024-05
-
+# SysMLv2 Release to use. First is release version of the API server,
+# the second is the release version of the SysMLv2
+release = 2024-07
+sysml_release= 2024-09
 
 # Jupyter - API server URL
 SYSML_API_SERVER=http://sysmlapiserver:9000
@@ -11,7 +10,6 @@ SYSML_API_SERVER=http://sysmlapiserver:9000
 DB_SERVER_URL = 'jdbc:postgresql://postgresdbserver:5432/sysml2'
 DB_USER = 'postgres'
 DB_PASSWORD = 'mysecretpassword'
-
 
 ##
 ## Local setup
@@ -49,12 +47,11 @@ run-mybinder: build-mybinder # run the mybinder jupyter image
 ##
 .PHONY: build-hub
 build-hub: ## Build dockerhub image
-	docker build -t gorenje/sysmlv2-jupyter:$(sysml_release) -f Dockerfile.hub --build-arg RELEASE=$(sysml_release) .
+	docker build -t freeandfair/sysmlv2-jupyter:$(sysml_release) -f Dockerfile.hub --build-arg RELEASE=$(sysml_release) .
 
 .PHONY: run-hub
 run-hub: build-hub ## Run dockerhub image
-	docker run -p 8888:8888 -e NO_TOKEN=yes -it gorenje/sysmlv2-jupyter:$(sysml_release)
-
+	docker run -p 8888:8888 -e NO_TOKEN=yes -it freeandfair/sysmlv2-jupyter:$(sysml_release)
 
 ## Build all
 .PHONY: build
@@ -66,6 +63,8 @@ build-latest: build-api build-jupyter
 	docker tag sysml.api:$(release) sysml.api:latest
 	docker tag sysml.jupyter:$(sysml_release) sysml.jupyter:latest
 
+# Note that these next two commands require that a container is running.
+# Run `make spin-up` first.
 .PHONY: get-notebooks
 get-notebooks: ## retrieve all notebooks in a standalone running container
 	docker exec -i $$(docker ps | grep sysml.jupyter | awk '// { print $$1 }') /bin/bash -c "tar czf - notebooks" | tar xzf -

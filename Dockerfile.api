@@ -1,15 +1,18 @@
 FROM openjdk:11-slim
 
 ##
-## This Dockerfile setups the SysML v2 API server and is designed to be
-## run in conjunction with the Jupyter server. This dockerfile is specifically
-## designed to be run with docker compose.
+## This Dockerfile setups the SysML v2 API server and is designed to
+## be run in conjunction with the Jupyter server.  This Dockerfile is
+## specifically designed to be run with `docker compose`.
+##
+## Meta-commentary on the structure of this Dockerfile is located in
+## its sister `Dockerfile`.
 ##
 
 RUN apt-get --quiet --yes update && apt-get install -yqq wget xmlstarlet
 
 ##
-## Use a non-root user for installation
+## Use a non-root user for installation.
 ##
 ARG NB_USER=sysml
 ARG NB_UID=1000
@@ -25,19 +28,20 @@ RUN adduser --disabled-password \
 USER root
 RUN chown -R ${NB_UID} ${HOME}
 
-## Switch to the lowly user, no more root.
+## Switch to the lowly `sysml` user, no more root.
 USER ${NB_USER}
 WORKDIR ${HOME}
 
-ARG SBT_VERSION=1.2.8
+ARG SBT_VERSION=1.10.5
 RUN wget -q https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.tgz
 
-## Defining the RELEASE down here ensures that the previous comamnds can
-## be recycled since they're not affected by the release version.
-ARG RELEASE=2023-02
+## Defining the RELEASE down here ensures that the previous comamnds
+## can be recycled since they are not affected by the release version.
+ARG RELEASE=2024-07
 
-RUN wget -q https://github.com/Systems-Modeling/SysML-v2-API-Services/archive/${RELEASE}.tar.gz?ts=20220819Z020300+00 -O ${RELEASE}.tar.gz
+RUN wget https://github.com/Systems-Modeling/SysML-v2-API-Services/archive/refs/tags/${RELEASE}.tar.gz -O ${RELEASE}.tar.gz
 
+## Unpack `sbt` and the SysMLv2 release.
 RUN tar xfz sbt-${SBT_VERSION}.tgz
 RUN tar xfz ${RELEASE}.tar.gz
 
@@ -55,11 +59,11 @@ RUN ${HOME}/sbt/bin/sbt compile
 ## Play framework complains about the secret key length...
 RUN sed s/key=.whatever./key=\"longersecretnowarnings\"/ -i conf/application.conf
 
-## need to allow the jupyter server access to the API server
+## We need to allow the Jupyter server access to the API server.
 ARG SYSML_API_SERVER="sysmlapiserver:9000"
 RUN echo "\n\nplay.filters.hosts {\n   allowed = [\"${SYSML_API_SERVER}\", \"localhost:9000\"]\n}\n" >> conf/application.conf
 
-## set the database connection information
+## Set the database connection information.
 ARG DB_SERVER_URL="jdbc:postgresql://postgresdbserver:5432/sysml2"
 ARG DB_USER="postgres"
 ARG DB_PASSWORD="mysecretpassword"

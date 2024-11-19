@@ -15,16 +15,12 @@ services:
   sysmlapiserver:
     image: "sysml.api:${RELEASE}"
     tty: true
-    links:
-      - postgresdbserver
     ports:
       - "9000:9000"
     restart: always
 
   sysmljupyter:
     image: "sysml.jupyter:${SYSML_RELEASE}"
-    links:
-      - sysmlapiserver
     ports:
       - "8888:8888"
     restart: always

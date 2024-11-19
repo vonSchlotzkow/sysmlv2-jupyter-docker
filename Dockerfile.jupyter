@@ -1,13 +1,13 @@
 FROM openjdk:17-slim
 
 ##
-## This Dockerfile is specifically designed to be run with the API Server
-## and started via docker compose. It makes assumptions about the existence
-## of an docker internal network.
+## This Dockerfile is specifically designed to be run with the API
+## Server and started via `docker compose`.  It makes assumptions
+## about the existence of a Docker internal network.
 ##
 
-## wget is used to retrieve Conda and SysML Release. Inkscape and LaTeX is
-## required for rendering notebooks as PDFs.
+## `wget` is used to retrieve Conda and SysML Release. Inkscape and
+## LaTeX is required for rendering notebooks as PDFs.
 RUN apt-get --quiet --yes update && apt-get install -yqq \
   gcc                         \
   g++                         \
@@ -42,43 +42,44 @@ WORKDIR ${HOME}
 
 ##
 ## Miniconda installation page:
-## https://docs.conda.io/en/latest/miniconda.html#linux-installers
+##   https://docs.conda.io/en/latest/miniconda.html#linux-installers
 ##
 RUN wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(uname -m).sh
 
-## Defining the RELEASE down here ensures that the previous comamnds can
-## be recycled since they're not affected by the release version.
-ARG RELEASE=2023-02
+## Defining the RELEASE down here ensures that the previous comamnds
+## can be recycled since they're not affected by the release version.
+ARG RELEASE=2024-09
 
 ##
 ## SysML page: https://github.com/Systems-Modeling/SysML-v2-Release
 ##
-RUN wget -q https://github.com/Systems-Modeling/SysML-v2-Release/archive/${RELEASE}.tar.gz?ts=20220819Z023100+00 -O ${RELEASE}.tar.gz
+RUN wget -q https://github.com/Systems-Modeling/SysML-v2-Release/archive/refs/tags/${RELEASE}.tar.gz -O ${RELEASE}.tar.gz
 
-## Install MiniConda
+## Install MiniConda.
 RUN chmod 755 ${HOME}/Miniconda3-latest-Linux-$(uname -m).sh
 RUN mkdir ${HOME}/conda
 RUN ${HOME}/Miniconda3-latest-Linux-$(uname -m).sh -f -b -p ${HOME}/conda
 RUN ${HOME}/conda/condabin/conda init
 
-## Use a different solver to avoid conda hanging
+## Use a different solver to avoid conda hanging.
 RUN ${HOME}/conda/condabin/conda update conda
 RUN ${HOME}/conda/condabin/conda install -n base conda-build conda-libmamba-solver
 RUN ${HOME}/conda/condabin/conda config --set solver libmamba
 
-## Unpack SysML
+## Unpack SysML.
 RUN tar xzf ${RELEASE}.tar.gz
 
 WORKDIR ${HOME}/SysML-v2-Release-${RELEASE}/install/jupyter
 
-## This is the path that conda init setups but conda init has no effect
-## here, so setup the PATH by hand. Else install.sh won't work.
+## This is the path that `conda init` creates but `conda init` has no
+## effect here, so set the `PATH` by hand, otherwise `install.sh` will
+## not work.
 ENV PATH="${HOME}/conda/bin:${HOME}/conda/condabin:/usr/local/openjdk-17/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
-## Install terminal notebook editor - https://github.com/joouha/euporie
+## Install terminal notebook editor, see https://github.com/joouha/euporie
 RUN pip install euporie
 
-## Install SysMLv2 as Jupyter Kernel
+## Install SysMLv2 as Jupyter Kernel.
 RUN ./install.sh
 
 ## Point the publish command to the local API server.
@@ -86,19 +87,19 @@ RUN ./install.sh
 ARG SYSML_API_SERVER=http://sysmlapiserver:9000
 RUN jq --arg api_server "${SYSML_API_SERVER}" '.env.ISYSML_API_BASE_PATH = $api_server' ${HOME}/conda/share/jupyter/kernels/sysml/kernel.json > .tmp.kernel.json && mv .tmp.kernel.json ${HOME}/conda/share/jupyter/kernels/sysml/kernel.json
 
-## Uninstall the terminal feature for security reasons
+## Uninstall the terminal feature for security reasons.
 RUN pip uninstall -y terminado
 
 WORKDIR ${HOME}/SysML-v2-Release-${RELEASE}/
 
-## Move any files in the top level directory to the doc directory
+## Move any files in the top level directory to the doc directory.
 RUN find . -maxdepth 1 -type f -exec mv \{\} doc \;
 
-## Copy example notebooks into the image
+## Copy example notebooks into the image.
 RUN mkdir notebooks
 COPY --chown=${NB_USER} notebooks/ notebooks/
 
-# Move some top level notebooks to the toplevel
+# Move some top level notebooks to the toplevel.
 RUN mv notebooks/*/StartHere.ipynb .
 RUN mv notebooks/*.ipynb .
 
