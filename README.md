@@ -6,15 +6,11 @@ The setup is taken from the [Jupyter installation](https://github.com/Systems-Mo
 
 In addition, an [API Server](https://github.com/Systems-Modeling/SysML-v2-API-Services) is also started and everything published in Jupyter will be pushed into this server.
 
-## Update - Nov 2024
+## Update - Dec 2024
 
-Free & Fair had a need to continue to use a Docker container to
-support active R&D that uses SysMLv2, thus will be updating this image
-for new releases of the SysMLv2 Pilot Implementation.  Images will
-be pushed to 
-[Free & Fair's DockerHub](https://hub.docker.com/?namespace=freeandfair).
+Because Free & Fair is using SysMLv2 as part of active R&D and needs an up-to-date Docker container, we will be updating this image for new releases of the SysMLv2 Pilot Implementation as we find it necessary; we are not, however, committed to updating it for every SysMLv2 release in a prompt fashion.  Images will be pushed to [Free & Fair's DockerHub](https://hub.docker.com/?namespace=freeandfair).
 
-## Update - Oct 2024
+## Update - Oct 2024 (from gorenje)
 
 I [no longer actively](https://github.com/gorenje/sysmlv2-jupyter-docker/issues/19#issuecomment-2193902929) maintain this repository, all my apologises to those frustrated by that. I have no active interest in SysMLv2 and hence doing this for free was counterproductive for me.
 
@@ -34,9 +30,9 @@ See below for specific release links.
 
 You can also view notebooks via [nbviewer](https://nbviewer.jupyter.org/github/freeandfair/sysmlv2-jupyter-docker/tree/master/notebooks) and from there it's possible to start up [Binder](https://mybinder.org).
 
-### Dockerhub
+### DockerHub
 
-Docker images are also [available](https://hub.docker.com/r/freeandfair/sysmlv2-jupyter). These are only of the Jupyter installation not the API server.
+Images are also available [on DockerHub](https://hub.docker.com/r/freeandfair/sysmlv2-jupyter). These are only of the Jupyter installation, not the API server.
 
 See below for specific pull statements.
 
@@ -151,7 +147,7 @@ git checkout release-2020-12
 make run-hub
 ```
 
-That will locally start DockerHub Jupyter image with the 2020-12 release.
+That will locally start DockerHub Jupyter image with the 2020-12 release. Note that branches for some releases, from early 2023 to late 2024, are currently missing because the repository was not being actively updated during that time.
 
 ## Production Use?
 
@@ -178,7 +174,7 @@ time.
 
 ## Building a New Release
 
-**TODO: Update for F&F release.**
+Free & Fair DockerHub releases are pushed automatically by GitHub continuous deployment when the `main` branch is updated. The procedure for making a release branch for a specific SysMLv2 release is as follows.
 
 When a new 
 [release tag](https://github.com/Systems-Modeling/SysML-v2-Release/tags) 
