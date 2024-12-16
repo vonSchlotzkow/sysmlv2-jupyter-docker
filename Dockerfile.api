@@ -44,6 +44,7 @@ RUN wget https://github.com/Systems-Modeling/SysML-v2-API-Services/archive/refs/
 ## Unpack `sbt` and the SysMLv2 release.
 RUN tar xfz sbt-${SBT_VERSION}.tgz
 RUN tar xfz ${RELEASE}.tar.gz
+RUN rm sbt-${SBT_VERSION}.tgz ${RELEASE}.tar.gz
 
 WORKDIR ${HOME}/SysML-v2-API-Services-${RELEASE}
 

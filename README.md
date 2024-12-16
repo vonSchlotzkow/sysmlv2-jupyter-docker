@@ -32,7 +32,8 @@ You can also view notebooks via [nbviewer](https://nbviewer.jupyter.org/github/f
 
 ### DockerHub
 
-Images are also available [on DockerHub](https://hub.docker.com/r/freeandfair/sysmlv2-jupyter). These are only of the Jupyter installation, not the API server.
+Images are also available [on DockerHub](https://hub.docker.com/r/freeandfair/sysmlv2-jupyter). These are only of the Jupyter installation, not the API server; they use the public API server,
+[https://sysml2.intercax.com:9000/](https://sysml2.intercax.com:9000/), for all API server requests.
 
 See below for specific pull statements.
 
@@ -181,7 +182,7 @@ When a new
 becomes available, the following things need doing:
 
 1. Ensure there is a corresponding [API Server](https://github.com/Systems-Modeling/SysML-v2-API-Services/tags) release.
-2. Start a new branch from the main branch, and follow this [commit](https://github.com/FreeAndFair/sysmlv2-jupyter-docker/commit/1869262840e7fa3eb9ced8dc21a6119f5483543d) to update all dockerfiles & Makefile for the new release (in this case 2024-09 SysMLv2 with 2024-07 API server). 
+2. Start a new branch from the main branch, and follow this [commit](https://github.com/FreeAndFair/sysmlv2-jupyter-docker/commit/1869262840e7fa3eb9ced8dc21a6119f5483543d) to update all dockerfiles & Makefile for the new release (in this case 2024-09 SysMLv2 with 2024-07 API server).
 3. Run `make build` to check that all dockerfiles build locally. Make sure that Docker is running locally.
 4. In a terminal window, run `make spin-up` to start a Jupyter server locally.
 5. In another terminal window, run `make update-testsuite` to update all the test notebooks in the repository. This also retrieves the notebooks from the Docker images and, in the end, there is a commit similar to this [one](https://github.com/freeandfair/sysmlv2-jupyter-docker/commit/3597bc3cc1fa2375163b562b02765b4640e3af22).

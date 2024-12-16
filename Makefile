@@ -11,8 +11,8 @@ DB_SERVER_URL = 'jdbc:postgresql://postgresdbserver:5432/sysml2'
 DB_USER = 'postgres'
 DB_PASSWORD = 'mysecretpassword'
 
-# URL for the docker repository to push the image to.
-DOCKER_REPOSITORY=registry-1.docker.io
+# DockerHub repository hostname
+DOCKER_REPOSITORY=docker.io
 
 # Organization within the docker repository to push to.
 DOCKER_ORGANIZATION=freeandfair
@@ -67,12 +67,12 @@ run-hub: build-hub ## run DockerHub image
 
 .PHONY: login
 login: ## log into DockerHub repository
-	$(info [info] logging into dockerhub repository)
+	$(info [info] logging into DockerHub repository)
 	docker login $(DOCKER_REPOSITORY)
 
 .PHONY: logout
 logout: ## log out of DockerHub repository
-	$(info [info] Logging out of dockerhub repository)
+	$(info [info] Logging out of DockerHub repository)
 	docker logout $(DOCKER_REPOSITORY)
 
 .PHONY: pull
