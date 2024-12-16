@@ -67,6 +67,7 @@ RUN ${HOME}/conda/condabin/conda config --set solver libmamba
 
 ## Install SysML.
 RUN tar xzf ${RELEASE}.tar.gz
+RUN rm ${RELEASE}.tar.gz
 
 WORKDIR ${HOME}/SysML-v2-Release-${RELEASE}/install/jupyter
 

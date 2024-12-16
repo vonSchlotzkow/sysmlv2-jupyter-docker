@@ -1,12 +1,12 @@
 # .github/workflows/dockerhub-image.yml
 # Author: Daniel M. Zimmerman
 # Created: 2024-12-09
-# Modified: 2024-12-09
+# Modified: 2024-12-16
 
 # This workflow builds the DockerHub image, and pushes it to
 # DockerHub if the action was triggered on the main branch.
 
-name: Build and Push (on main only) DockerHub Build
+name: Build and Push (on main only) DockerHub Image
 
 on:
   push:
