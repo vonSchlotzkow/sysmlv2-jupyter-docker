@@ -11,26 +11,38 @@ services:
       - "5432:5432"
     volumes:
       - postgresdbserver:/var/lib/postgresql/data
+    networks:
+      - thenetwork
 
   sysmlapiserver:
-    image: "sysml.api:${RELEASE}"
+    # image: "sysml.api:${RELEASE}"
+    build: 
+      context: .
+      dockerfile: Dockerfile.api
     tty: true
     ports:
       - "9000:9000"
     restart: always
+    networks:
+      - thenetwork
 
   sysmljupyter:
-    image: "sysml.jupyter:${SYSML_RELEASE}"
+    # image: "sysml.jupyter:${SYSML_RELEASE}"
+    build: 
+      context: .
+      dockerfile: Dockerfile.jupyter
     ports:
       - "8888:8888"
     restart: always
     volumes:
       - "./mydata:/home/sysml/SysML-v2-Release-${SYSML_RELEASE}/mydata"
+    networks:
+      - thenetwork
 
 networks:
-  default:
-    external:
-      name: thenetwork
+  thenetwork:
+    labels:
+      com.docker.compose.network: thenetwork
 
 volumes:
   postgresdbserver:
